@@ -13,32 +13,39 @@ interface FlowCardProps {
 }
 
 const CardContainer = styled.div`
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.04); /* Lighter shadow */
-  background-color: #fff;
-  transition: transform 0.2s;
+  width: 430px; /* Fixed width as requested */
+  display: flex;
+  flex-direction: column;
   cursor: pointer;
-  position: relative;
+  transition: transform 0.2s ease;
 
   &:hover {
-    transform: translateY(-3px);
+    transform: translateY(-5px);
   }
 
   &:hover .card-hover-target {
     opacity: 1;
+    transform: translateY(0);
   }
 `;
 
 const ImageWrapper = styled.div`
-  height: 240px; /* Increased height for better proportions */
-  background-color: #f0f0f0;
+  width: 100%;
+  height: 300px;
   position: relative;
+  overflow: hidden;
+  border-radius: 20px; /* Rounded corners for image only */
+  background-color: #f0f0f0;
   
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.05);
   }
 `;
 
@@ -57,70 +64,62 @@ const GradientOverlay = styled.div`
 const Author = styled.div`
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: #4a4a4a; /* Match Stats color */
+  gap: 8px; /* Slightly increased gap for larger icon */
+  font-size: 18px; /* Increased to 18px */
+  color: #fff;
   position: absolute;
   top: 15px;
   left: 15px;
-  text-shadow: 0 0 4px rgba(255, 255, 255, 0.8), 0 0 2px rgba(255, 255, 255, 1);
-  font-weight: 500; /* Match Stats weight */
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  font-weight: 500;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transform: translateY(-20px);
+  transition: all 0.3s ease;
   z-index: 10;
   
   svg {
-    width: 14px;
-    height: 14px;
-    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 1));
+    width: 30px; /* Increased to 30px */
+    height: 30px; /* Increased to 30px */
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
   }
 `;
 
-const BottomInfo = styled.div`
-  position: absolute;
-  bottom: 15px;
-  left: 15px;
+const ContentWrapper = styled.div`
+  padding: 12px 4px 0 4px;
   display: flex;
-  flex-direction: column;
-  gap: 8px; /* Increased gap for better separation */
-  z-index: 1;
-  width: calc(100% - 30px);
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const Title = styled.h3`
-  font-size: 18px;
-  font-weight: 700; /* Extra bold for emphasis */
+  font-size: 20px; /* Increased to 20px */
+  font-weight: 700;
+  color: #000;
   margin: 0;
-  color: #1a1a1a; /* Slightly darker */
-  text-shadow: 0 0 4px rgba(255, 255, 255, 0.8), 0 0 2px rgba(255, 255, 255, 1);
-  line-height: 1.3;
-  
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-width: 70%;
 `;
 
 const Stats = styled.div`
-  color: #4a4a4a; /* Lighter color to push it back in hierarchy */
-  font-size: 12px; /* Restored to standard minimum */
   display: flex;
   align-items: center;
-  gap: 10px;
-  text-shadow: 0 0 4px rgba(255, 255, 255, 0.8), 0 0 2px rgba(255, 255, 255, 1);
-  font-weight: 500;
+  gap: 8px;
+  color: #888;
+  font-size: 14px; /* Increased to 14px */
+  font-weight: 400;
 `;
 
-const StatItem = styled.span`
+const StatItem = styled.div`
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
+  line-height: 1; /* Ensure text aligns vertically with icon */
   
   svg {
-    width: 14px; /* Proportional icon size */
-    height: 14px;
-    margin-bottom: 1px;
-    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 1));
-    opacity: 0.8;
+    font-size: 14px;
+    display: block; /* Remove extra space below svg */
   }
 `;
 
@@ -137,14 +136,14 @@ const FlowCard = ({ image, title, author, likes, views, onClick }: FlowCardProps
         <img src={imgSrc} alt={title} onError={handleImageError} />
         <GradientOverlay className="card-hover-target" />
         <Author className="card-hover-target"><FiUser /> {author}</Author>
-        <BottomInfo>
-          <Title>{title}</Title>
-          <Stats>
-            <StatItem><FiThumbsUp /> {likes}</StatItem>
-            <StatItem><FiEye /> {views}</StatItem>
-          </Stats>
-        </BottomInfo>
       </ImageWrapper>
+      <ContentWrapper>
+        <Title>{title}</Title>
+        <Stats>
+          <StatItem><FiThumbsUp /> {likes}</StatItem>
+          <StatItem><FiEye /> {views}</StatItem>
+        </Stats>
+      </ContentWrapper>
     </CardContainer>
   );
 };

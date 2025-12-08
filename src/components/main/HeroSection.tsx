@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import { FiSearch } from 'react-icons/fi';
+import logo from '../../assets/logo.png';
 
 const HeroContainer = styled.section`
   text-align: center;
@@ -76,7 +77,7 @@ const HeroSection = ({ onSearch }: HeroSectionProps) => {
   return (
     <HeroContainer>
       <Title>AI 어떻게 사용하세요?</Title>
-      <Subtitle><span>AYNO</span> 에서 AI 사용법을 공유해요!</Subtitle>
+      <Subtitle><img src={logo} alt="AYNO" style={{ height: '28px', width: 'auto', verticalAlign: 'middle', marginBottom: '6px', objectFit: 'contain' }} /> 에서 AI 사용법을 공유해요!</Subtitle>
       <SearchContainer>
         <SearchIcon onClick={() => onSearch(keyword)} style={{ cursor: 'pointer' }}>
           <FiSearch />
