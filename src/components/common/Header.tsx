@@ -1,12 +1,14 @@
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 import { PATH } from '../../constants/path';
+import logo from '../../assets/logo.png';
 
 const HeaderContainer = styled.header`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 20px 40px;
+  height: 60px;
+  padding: 0;
   background-color: #fff;
   border-bottom: 1px solid #eee;
   position: sticky;
@@ -14,16 +16,22 @@ const HeaderContainer = styled.header`
   z-index: 1000;
 `;
 
+const InnerContainer = styled.div`
+  width: 100%;
+  max-width: 1440px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const Logo = styled(Link)`
-  font-size: 24px;
-  font-weight: bold;
-  color: #000;
-  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  height: 40px;
 `;
 
 const Nav = styled.nav`
   display: flex;
-  gap: 20px;
 `;
 
 const LoginLink = styled(Link)`
@@ -36,14 +44,18 @@ const LoginLink = styled(Link)`
 `;
 
 const Header = () => {
-    return (
-        <HeaderContainer>
-            <Logo to={PATH.HOME}>AYNO</Logo>
-            <Nav>
-                <LoginLink to={PATH.LOGIN}>로그인</LoginLink>
-            </Nav>
-        </HeaderContainer>
-    );
+  return (
+    <HeaderContainer>
+      <InnerContainer>
+        <Logo to={PATH.HOME}>
+          <img src={logo} alt="AYNO" width="76" height="40" style={{ objectFit: 'contain' }} />
+        </Logo>
+        <Nav>
+          <LoginLink to={PATH.LOGIN}>로그인</LoginLink>
+        </Nav>
+      </InnerContainer>
+    </HeaderContainer>
+  );
 };
 
 export default Header;

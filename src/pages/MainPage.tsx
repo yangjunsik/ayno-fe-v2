@@ -4,52 +4,70 @@ import FlowCard from '../components/main/FlowCard';
 import Pagination from '../components/main/Pagination';
 
 const MainContainer = styled.div`
-  max-width: 1200px;
+  max-width: 1410px; /* Fits 3 cards (430*3 + 40*2 + 40 padding) */
   margin: 0 auto;
   padding: 0 20px;
+
+  @media (max-width: 1410px) {
+    max-width: 940px; /* Fits 2 cards (430*2 + 40 + 40 padding) */
+  }
+
+  @media (max-width: 940px) {
+    max-width: 470px; /* Fits 1 card (430 + 40 padding) */
+  }
 `;
 
 const SectionHeader = styled.div`
   margin-top: 60px;
-  margin-bottom: 30px;
+  margin-bottom: 40px; /* Increased spacing */
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const TitleRow = styled.div`
-  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 12px;
-`;
-
-const TitleAccent = styled.div`
-  width: 4px;
-  height: 28px;
-  background-color: #222;
-  border-radius: 2px;
 `;
 
 const StyledSectionTitle = styled.h2`
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
-  color: #111;
-  letter-spacing: -0.5px;
+  color: #000;
 `;
 
+const SortContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  color: #888;
+`;
 
+const SortButton = styled.button<{ active: boolean }>`
+  font-size: 16px;
+  color: ${({ active }) => (active ? '#000' : '#888')};
+  font-weight: ${({ active }) => (active ? '700' : '400')};
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  
+  &:hover {
+    color: #000;
+  }
+`;
+
+const Separator = styled.span`
+  color: #ddd;
+  font-size: 16px;
+  transform: translateY(-1px); /* Visual correction for vertical alignment */
+`;
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 40px; /* Increased gap for better spacing */
-  
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  grid-template-columns: repeat(auto-fit, 430px);
+  justify-content: start; /* Align grid with title */
+  gap: 40px;
   
   @media (max-width: 480px) {
     grid-template-columns: 1fr;
+    justify-content: center;
   }
 `;
 
@@ -70,6 +88,7 @@ const MainPage = () => {
     const [searchKeyword, setSearchKeyword] = useState('');
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
+    const [sort, setSort] = useState('createdAt,desc');
 
     useEffect(() => {
         const fetchArtifacts = async () => {
@@ -77,9 +96,9 @@ const MainPage = () => {
             try {
                 let response;
                 if (searchKeyword) {
-                    response = await searchArtifacts(searchKeyword, currentPage);
+                    response = await searchArtifacts(searchKeyword, currentPage, 12, sort);
                 } else {
-                    response = await getArtifacts(currentPage);
+                    response = await getArtifacts(currentPage, 12, sort);
                 }
                 setFlows(response.data.content);
                 setTotalPages(response.data.totalPages);
@@ -92,7 +111,7 @@ const MainPage = () => {
         };
 
         fetchArtifacts();
-    }, [searchKeyword, currentPage]);
+    }, [searchKeyword, currentPage, sort]);
 
     const handleSearch = (keyword: string) => {
         setSearchKeyword(keyword);
@@ -109,11 +128,22 @@ const MainPage = () => {
             <HeroSection onSearch={handleSearch} />
             <MainContainer>
                 <SectionHeader>
-                    <TitleRow>
-                        <TitleAccent />
-                        <StyledSectionTitle>신규 프로젝트</StyledSectionTitle>
-                    </TitleRow>
-
+                    <StyledSectionTitle>신규 플로우</StyledSectionTitle>
+                    <SortContainer>
+                        <SortButton
+                            active={sort === 'likeCount,desc'}
+                            onClick={() => setSort('likeCount,desc')}
+                        >
+                            인기순
+                        </SortButton>
+                        <Separator>|</Separator>
+                        <SortButton
+                            active={sort === 'createdAt,desc'}
+                            onClick={() => setSort('createdAt,desc')}
+                        >
+                            최신순
+                        </SortButton>
+                    </SortContainer>
                 </SectionHeader>
                 {loading ? (
                     <Spinner />
