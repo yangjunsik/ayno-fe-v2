@@ -1,5 +1,4 @@
 import { Helmet } from 'react-helmet-async';
-import logo from '../../assets/og_logo.png';
 
 interface SEOProps {
     title?: string;
@@ -13,7 +12,7 @@ const SEO = ({ title, description, image, url, keywords }: SEOProps) => {
     const defaultTitle = 'AYNO - AI활용 과정을 공유하세요';
     const defaultDescription = 'AI 활용 노하우를 공유하고, 다른 사람들의 워크플로우를 탐색해보세요. AYNO에서 당신의 AI 경험을 확장하세요.';
     const defaultUrl = 'https://ayno.co.kr';
-    const defaultImage = `${defaultUrl}${logo}`;
+    const defaultImage = 'https://ayno.co.kr/og_logo.png';
     const defaultKeywords = 'AI, 인공지능, 워크플로우, 프롬프트, ChatGPT, Midjourney, AI활용, 노하우 공유';
 
     const finalTitle = title ? `${title} | AYNO` : defaultTitle;
