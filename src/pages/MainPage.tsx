@@ -175,7 +175,7 @@ const MainPage = () => {
                             {flows.map(flow => (
                                 <FlowCard
                                     key={flow.artifactId}
-                                    image=""
+                                    image={flow.thumbnailUrl}
                                     title={flow.artifactTitle}
                                     author={flow.nickname}
                                     authorImage={flow.profileImageUrl}

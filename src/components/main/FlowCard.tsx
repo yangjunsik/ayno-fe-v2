@@ -1,17 +1,7 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import defaultThumbnail from '../../assets/default_thumbnail.png';
 import { FiUser, FiThumbsUp, FiEye } from 'react-icons/fi';
-
-interface FlowCardProps {
-  image: string;
-  title: string;
-  author: string;
-  authorImage?: string;
-  likes: number;
-  views: string;
-  onClick?: () => void;
-}
 
 const CardContainer = styled.div`
   width: 430px; /* Fixed width as requested */
@@ -129,8 +119,22 @@ const StatItem = styled.div`
   }
 `;
 
+interface FlowCardProps {
+  image: string;
+  title: string;
+  author: string;
+  authorImage?: string;
+  likes: number;
+  views: string;
+  onClick?: () => void;
+}
+
 const FlowCard = ({ image, title, author, authorImage, likes, views, onClick }: FlowCardProps) => {
   const [imgSrc, setImgSrc] = useState(image || defaultThumbnail);
+
+  useEffect(() => {
+    setImgSrc(image || defaultThumbnail);
+  }, [image]);
 
   const handleImageError = () => {
     setImgSrc(defaultThumbnail);
