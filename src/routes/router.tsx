@@ -1,9 +1,10 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { PATH } from './constants/path';
-import App from './App';
-import MainPage from './pages/MainPage';
-import DetailPage from './pages/DetailPage';
-import LoginPage from './pages/LoginPage';
+import App from '../App';
+import MainPage from '../pages/MainPage';
+import DetailPage from '../pages/DetailPage';
+import LoginPage from '../pages/LoginPage';
+import PrivateRoute from './PrivateRoute';
 
 export const router = createBrowserRouter([
     {
@@ -28,7 +29,11 @@ export const router = createBrowserRouter([
             },
             {
                 path: PATH.WRITE,
-                element: <div>Write Page Content</div>,
+                element: (
+                    <PrivateRoute>
+                        <div>Write Page Content</div>
+                    </PrivateRoute>
+                ),
             },
         ],
     },

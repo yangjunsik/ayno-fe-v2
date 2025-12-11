@@ -3,7 +3,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Header from './components/common/Header';
 import Footer from './components/common/Footer';
 import SEO from './components/common/SEO';
-import { PATH } from './constants/path';
+import { PATH } from './routes/constants/path';
 
 const StyledMain = styled.main`
   min-height: calc(100vh - 300px); /* Prevent footer from jumping up */
@@ -22,7 +22,7 @@ function App() {
         <Outlet />
       </StyledMain>
       {!isLoginPage && <Footer />}
-    </div>
+    </div >
   );
 }
 

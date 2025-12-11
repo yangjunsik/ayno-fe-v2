@@ -1,19 +1,23 @@
 import styled from '@emotion/styled';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import { FcGoogle } from 'react-icons/fc';
-import { FiMail, FiLock } from 'react-icons/fi';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 import logo from '../assets/logo_hero.svg';
-import { PATH } from '../constants/path';
+import { PATH } from '../routes/constants/path';
+import { login } from '../api/auth';
+import { getMyProfile } from '../api/user';
+import { useAuth } from '../hooks/useAuth';
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 60px 20px;
-  min-height: 100vh;
-  background-color: #fff;
+  padding: 0 20px;
+  min-height: calc(100vh - 60px);
+  background-color: #F9FAFB;
 `;
 
 const Logo = styled.img`
@@ -40,33 +44,41 @@ const InputWrapper = styled.div`
   width: 100%;
 `;
 
-const IconWrapper = styled.div`
+const Input = styled.input<{ hasError?: boolean }>`
+  width: 100%;
+  height: 48px;
+  padding: 0 40px 0 16px; /* Right padding for eye icon, standard left padding */
+  border-radius: 8px;
+  border: 1px solid ${({ hasError }) => (hasError ? '#EF4444' : '#E5E7EB')};
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s;
+
+  &:focus {
+    border-color: ${({ hasError }) => (hasError ? '#EF4444' : '#000')};
+  }
+
+  &::placeholder {
+    color: #9CA3AF;
+  }
+`;
+
+const TogglePasswordButton = styled.button`
   position: absolute;
-  left: 14px;
+  right: 12px;
   top: 50%;
   transform: translateY(-50%);
   color: #9CA3AF;
   font-size: 20px;
   display: flex;
   align-items: center;
-`;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
 
-const Input = styled.input`
-  width: 100%;
-  height: 48px;
-  padding: 0 16px 0 44px; /* Left padding for icon */
-  border-radius: 8px;
-  border: 1px solid #E5E7EB;
-  font-size: 15px;
-  outline: none;
-  transition: all 0.2s;
-
-  &:focus {
-    border-color: #000;
-  }
-
-  &::placeholder {
-    color: #9CA3AF;
+  &:hover {
+    color: #666;
   }
 `;
 
@@ -86,6 +98,13 @@ const LoginButton = styled.button`
   &:hover {
     opacity: 0.9;
   }
+`;
+
+const ErrorMessage = styled.p`
+  color: #EF4444;
+  font-size: 13px;
+  text-align: center;
+  margin-top: 4px;
 `;
 
 const Divider = styled.div`
@@ -135,9 +154,11 @@ const SocialButton = styled.button<{ bgColor?: string; textColor?: string; borde
   }
 
   svg {
-    font-size: 24px;
+    font-size: 20px;
     position: absolute;
     left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
   }
 `;
 
@@ -160,8 +181,38 @@ const SignupLink = styled.div`
 `;
 
 const LoginPage = () => {
-    const handleLogin = () => {
-        alert('로그인 기능 준비 중입니다.');
+    const navigate = useNavigate();
+    const { login: authLogin } = useAuth();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const handleLogin = async () => {
+        setErrorMessage(''); // Reset error
+
+        if (!email || !password) {
+            setErrorMessage('이메일과 비밀번호를 모두 입력해주세요.');
+            return;
+        }
+
+        try {
+            await login({ username: email, password });
+
+            // Login success: Fetch user profile
+            const response = await getMyProfile();
+            if (response.data) {
+                authLogin(response.data);
+                navigate(PATH.HOME);
+            } else {
+                // Fallback if no data
+                navigate(PATH.HOME);
+            }
+        } catch (error: any) {
+            console.error('Login failed:', error);
+            const message = error.response?.data?.errorMessage || '아이디 또는 비밀번호가 일치하지 않습니다.';
+            setErrorMessage(message);
+        }
     };
 
     const handleKakaoLogin = () => {
@@ -179,21 +230,39 @@ const LoginPage = () => {
             <FormContainer>
                 <InputGroup>
                     <InputWrapper>
-                        <IconWrapper>
-                            <FiMail />
-                        </IconWrapper>
-                        <Input type="email" placeholder="이메일을 입력해주세요" />
+                        <Input
+                            type="email"
+                            placeholder="이메일을 입력해주세요"
+                            value={email}
+                            onChange={(e) => {
+                                setEmail(e.target.value);
+                            }}
+                            hasError={!!errorMessage}
+                        />
                     </InputWrapper>
                 </InputGroup>
 
                 <InputGroup>
                     <InputWrapper>
-                        <IconWrapper>
-                            <FiLock />
-                        </IconWrapper>
-                        <Input type="password" placeholder="비밀번호를 입력해주세요" />
+                        <Input
+                            type={showPassword ? 'text' : 'password'}
+                            placeholder="비밀번호를 입력해주세요"
+                            value={password}
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                            }}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleLogin();
+                            }}
+                            hasError={!!errorMessage}
+                        />
+                        <TogglePasswordButton onClick={() => setShowPassword(!showPassword)} type="button">
+                            {showPassword ? <FiEyeOff /> : <FiEye />}
+                        </TogglePasswordButton>
                     </InputWrapper>
                 </InputGroup>
+
+                {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
 
                 <LoginButton onClick={handleLogin}>
                     로그인
@@ -233,6 +302,5 @@ const LoginPage = () => {
     );
 };
 
-
-
 export default LoginPage;
+
