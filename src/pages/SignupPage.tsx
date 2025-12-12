@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { FiEye, FiEyeOff, FiChevronRight } from 'react-icons/fi';
 import logo from '../assets/logo_hero.svg';
 import { PATH } from '../routes/constants/path';
+import { signup, checkUsername } from '../api/auth';
 
 const Container = styled.div`
   display: flex;
@@ -225,10 +226,20 @@ const SignupPage = () => {
             return;
         }
 
-        // Mock Success
-        setIsEmailChecked(true);
-        setEmailError('');
-        alert('사용 가능한 이메일입니다. (Mock)');
+        try {
+            const response = await checkUsername(email);
+            if (response.data?.available) {
+                setIsEmailChecked(true);
+                setEmailError('');
+                alert('사용 가능한 이메일입니다.');
+            } else {
+                setIsEmailChecked(false);
+                setEmailError('이미 사용 중인 이메일입니다.');
+            }
+        } catch (error) {
+            console.error('Email check failed:', error);
+            setEmailError('이메일 중복 확인에 실패했습니다.');
+        }
     };
 
     // Password Validation
@@ -279,9 +290,18 @@ const SignupPage = () => {
     const handleSignup = async () => {
         if (!isFormValid) return;
 
-        // Mock Success
-        alert('회원가입이 완료되었습니다! (Mock)');
-        navigate(PATH.LOGIN);
+        try {
+            await signup({
+                username: email,
+                password,
+                marketingAgreed: agreements.marketing,
+            });
+            alert('회원가입이 완료되었습니다! 로그인해주세요.');
+            navigate(PATH.LOGIN);
+        } catch (error: any) {
+            console.error('Signup failed:', error);
+            alert(error.response?.data?.errorMessage || '회원가입에 실패했습니다.');
+        }
     };
 
     return (
