@@ -1,10 +1,12 @@
+export type AdminRole = 'ADMIN' | 'OPERATOR';
+
+export type AdminStatus = 'ACTIVE' | 'SUSPENDED' | 'DELETED';
+
 export interface AdminUser {
     adminId: number;
     adminName: string;
-    role: 'SUPER_ADMIN' | 'ADMIN'; // Adjust based on actual roles
-    status: 'ACTIVE' | 'INACTIVE';
-    createdAt: string;
-    updatedAt: string;
+    role: AdminRole;
+    status: AdminStatus;
 }
 
 export interface AdminLoginResponse {

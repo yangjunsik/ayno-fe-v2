@@ -20,7 +20,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const checkAuth = useCallback(async () => {
         try {
-            const response = await getMyProfile();
+            const response = await getMyProfile({ suppressErrorToast: true });
             if (response.data) {
                 setUser(response.data);
             } else {

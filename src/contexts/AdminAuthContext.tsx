@@ -20,8 +20,8 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const checkAdminAuth = useCallback(async () => {
         try {
             const response = await getAdminProfile();
-            if (response.data?.data) {
-                setAdminUser(response.data.data);
+            if (response.data) {
+                setAdminUser(response.data);
             } else {
                 setAdminUser(null);
             }
@@ -39,19 +39,17 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const login = useCallback(async (username: string, password: string) => {
         try {
             const response = await adminLogin(username, password);
-            if (response.data?.data?.admin) {
-                setAdminUser(response.data.data.admin);
-                // Store tokens if needed, client.ts might handle cookies automatically
-            }
+            console.log('Admin login response:', response);
+            // Always check auth after successful login to update state
+            await checkAdminAuth();
         } catch (error) {
             console.error('Admin login failed', error);
             throw error;
         }
-    }, []);
+    }, [checkAdminAuth]);
 
     const logout = useCallback(() => {
         setAdminUser(null);
-        // TODO: Call logout API to clear cookies if needed
     }, []);
 
     return (
