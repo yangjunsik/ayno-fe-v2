@@ -1,6 +1,6 @@
 export interface Interest {
     interestId: number;
-    interestName: string;
+    interestLabel: string;
 }
 
 export interface JobRole {

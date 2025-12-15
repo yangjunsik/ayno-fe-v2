@@ -4,12 +4,12 @@ import type { Interest, JobRole, Tool } from '../types/resource';
 
 // Interests
 export const getInterests = async () => {
-    const response = await client.get<ApiResponse<Interest[]>>('/api/admin/interests');
+    const response = await client.get<ApiResponse<Interest[]>>('/api/interests');
     return response.data;
 };
 
-export const addInterest = async (interestName: string) => {
-    const response = await client.post<ApiResponse<Interest>>('/api/admin/interests', { interestName });
+export const addInterest = async (label: string) => {
+    const response = await client.post<ApiResponse<Interest>>('/api/admin/interests', { label });
     return response.data;
 };
 

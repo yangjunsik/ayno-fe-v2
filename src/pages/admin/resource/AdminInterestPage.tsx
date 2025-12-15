@@ -10,7 +10,7 @@ const AdminInterestPage = () => {
             getFn={getInterests}
             addFn={addInterest}
             deleteFn={deleteInterest}
-            mapItem={(item) => ({ id: item.interestId, name: item.interestName })}
+            mapItem={(item) => ({ id: item.interestId, name: item.interestLabel })}
         />
     );
 };
