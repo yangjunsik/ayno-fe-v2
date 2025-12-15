@@ -4,4 +4,5 @@ export const PATH = {
     SIGNUP: '/signup',
     WRITE: '/write',
     ARTIFACT_DETAIL: '/artifact/:id',
+    ADMIN: '/admin',
 } as const;

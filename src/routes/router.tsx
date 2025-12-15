@@ -6,6 +6,9 @@ import DetailPage from '../pages/DetailPage';
 import LoginPage from '../pages/LoginPage';
 import SignupPage from '../pages/SignupPage';
 import PrivateRoute from './PrivateRoute';
+import MainLayout from '../layouts/MainLayout';
+import AdminLayout from '../layouts/AdminLayout';
+import AdminDashboard from '../pages/admin/AdminDashboard';
 
 export const router = createBrowserRouter([
     {
@@ -13,28 +16,43 @@ export const router = createBrowserRouter([
         element: <App />,
         children: [
             {
-                path: PATH.HOME,
-                element: <MainPage />,
+                element: <MainLayout />,
+                children: [
+                    {
+                        path: PATH.HOME,
+                        element: <MainPage />,
+                    },
+                    {
+                        path: PATH.LOGIN,
+                        element: <LoginPage />,
+                    },
+                    {
+                        path: PATH.SIGNUP,
+                        element: <SignupPage />,
+                    },
+                    {
+                        path: PATH.ARTIFACT_DETAIL,
+                        element: <DetailPage />,
+                    },
+                    {
+                        path: PATH.WRITE,
+                        element: (
+                            <PrivateRoute>
+                                <div>Write Page Content</div>
+                            </PrivateRoute>
+                        ),
+                    },
+                ],
             },
             {
-                path: PATH.LOGIN,
-                element: <LoginPage />,
-            },
-            {
-                path: PATH.SIGNUP,
-                element: <SignupPage />,
-            },
-            {
-                path: PATH.ARTIFACT_DETAIL,
-                element: <DetailPage />,
-            },
-            {
-                path: PATH.WRITE,
-                element: (
-                    <PrivateRoute>
-                        <div>Write Page Content</div>
-                    </PrivateRoute>
-                ),
+                path: PATH.ADMIN,
+                element: <AdminLayout />,
+                children: [
+                    {
+                        index: true,
+                        element: <AdminDashboard />,
+                    },
+                ],
             },
         ],
     },
