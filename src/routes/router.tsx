@@ -9,6 +9,7 @@ import PrivateRoute from './PrivateRoute';
 import MainLayout from '../layouts/MainLayout';
 import AdminLayout from '../layouts/AdminLayout';
 import AdminDashboard from '../pages/admin/AdminDashboard';
+import AdminLoginPage from '../pages/admin/AdminLoginPage';
 
 export const router = createBrowserRouter([
     {
@@ -43,6 +44,10 @@ export const router = createBrowserRouter([
                         ),
                     },
                 ],
+            },
+            {
+                path: PATH.ADMIN_LOGIN,
+                element: <AdminLoginPage />,
             },
             {
                 path: PATH.ADMIN,

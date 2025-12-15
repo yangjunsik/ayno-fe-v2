@@ -5,4 +5,5 @@ export const PATH = {
     WRITE: '/write',
     ARTIFACT_DETAIL: '/artifact/:id',
     ADMIN: '/admin',
+    ADMIN_LOGIN: '/admin/login',
 } as const;
