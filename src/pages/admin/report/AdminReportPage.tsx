@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { getReports, updateReportStatus } from '../../../api/adminReport';
 import { updateUserStatus } from '../../../api/adminUser';
-import type { Report, ReportStatus } from '../../../types/adminReport';
-import { FaSearch, FaFilter } from 'react-icons/fa';
+import type { Report, ReportStatus, TargetType } from '../../../types/adminReport';
+import { formatDate } from '../../../utils/date';
 
 const Container = styled.div`
     padding: 32px;
@@ -104,6 +104,7 @@ const ActionButton = styled.button`
 const AdminReportPage = () => {
     const [reports, setReports] = useState<Report[]>([]);
     const [statusFilter, setStatusFilter] = useState<ReportStatus | ''>('');
+    const [targetTypeFilter, setTargetTypeFilter] = useState<TargetType | ''>('');
     const [isLoading, setIsLoading] = useState(false);
 
     const fetchReports = async () => {
@@ -111,6 +112,7 @@ const AdminReportPage = () => {
         try {
             const response = await getReports({
                 status: statusFilter || undefined,
+                targetType: targetTypeFilter || undefined,
                 size: 20
             });
             if (response.data && Array.isArray(response.data.content)) {
@@ -125,12 +127,14 @@ const AdminReportPage = () => {
 
     useEffect(() => {
         fetchReports();
-    }, [statusFilter]);
+    }, [statusFilter, targetTypeFilter]);
 
     const handleStatusChange = async (id: number, newStatus: ReportStatus) => {
-        if (!window.confirm(`상태를 ${newStatus}로 변경하시겠습니까?`)) return;
+        const memo = window.prompt(`상태를 ${newStatus}로 변경하시겠습니까?\n관리자 메모를 입력해주세요 (선택):`);
+        if (memo === null) return; // Cancelled
+
         try {
-            await updateReportStatus(id, newStatus);
+            await updateReportStatus(id, newStatus, memo);
             fetchReports();
         } catch (error) {
             alert('상태 변경 실패');
@@ -160,45 +164,63 @@ const AdminReportPage = () => {
                     <option value="RESOLVED">처리완료 (RESOLVED)</option>
                     <option value="REJECTED">반려됨 (REJECTED)</option>
                 </Select>
+                <Select
+                    value={targetTypeFilter}
+                    onChange={(e) => setTargetTypeFilter(e.target.value as TargetType | '')}
+                >
+                    <option value="">전체 유형</option>
+                    <option value="USER">유저</option>
+                    <option value="ARTIFACT">아티팩트</option>
+                    <option value="COMMENT">댓글</option>
+                </Select>
             </FilterSection>
 
             <Table>
                 <thead>
                     <tr>
                         <Th>ID</Th>
+                        <Th>유형</Th>
                         <Th>신고자</Th>
-                        <Th>대상자</Th>
+                        <Th>대상 ID</Th>
                         <Th>사유</Th>
                         <Th>날짜</Th>
                         <Th>상태</Th>
+                        <Th>메모</Th>
                         <Th>관리</Th>
                     </tr>
                 </thead>
                 <tbody>
                     {isLoading ? (
-                        <tr><Td colSpan={7} style={{ textAlign: 'center' }}>로딩중...</Td></tr>
+                        <tr><Td colSpan={9} style={{ textAlign: 'center' }}>로딩중...</Td></tr>
                     ) : reports.length === 0 ? (
-                        <tr><Td colSpan={7} style={{ textAlign: 'center' }}>데이터가 없습니다.</Td></tr>
+                        <tr><Td colSpan={9} style={{ textAlign: 'center' }}>데이터가 없습니다.</Td></tr>
                     ) : (
                         reports.map((report) => (
                             <tr key={report.reportId}>
                                 <Td>{report.reportId}</Td>
-                                <Td>{report.reporterName}</Td>
-                                <Td>{report.targetName}</Td>
+                                <Td>{report.targetType}</Td>
+                                <Td>
+                                    {report.reporterNickname}<br />
+                                    <span style={{ fontSize: '12px', color: '#888' }}>{report.reporterEmail}</span>
+                                </Td>
+                                <Td>{report.targetId}</Td>
                                 <Td>{report.reason}</Td>
-                                <Td>{new Date(report.createdAt).toLocaleDateString()}</Td>
+                                <Td>{formatDate(report.createdAt)}</Td>
                                 <Td><StatusBadge status={report.status}>{report.status}</StatusBadge></Td>
+                                <Td>{report.adminMemo || '-'}</Td>
                                 <Td>
                                     {report.status === 'PENDING' && (
                                         <>
                                             <ActionButton onClick={() => handleStatusChange(report.reportId, 'RESOLVED')}>승인</ActionButton>
                                             <ActionButton onClick={() => handleStatusChange(report.reportId, 'REJECTED')}>반려</ActionButton>
-                                            <ActionButton
-                                                onClick={() => handleBlockUser(report.targetId)}
-                                                style={{ borderColor: '#ff4d4f', color: '#ff4d4f' }}
-                                            >
-                                                차단
-                                            </ActionButton>
+                                            {report.targetType === 'USER' && (
+                                                <ActionButton
+                                                    onClick={() => handleBlockUser(report.targetId)}
+                                                    style={{ borderColor: '#ff4d4f', color: '#ff4d4f' }}
+                                                >
+                                                    차단
+                                                </ActionButton>
+                                            )}
                                         </>
                                     )}
                                 </Td>

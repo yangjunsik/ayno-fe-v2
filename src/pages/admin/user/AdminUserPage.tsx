@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { getUsers, updateUserStatus } from '../../../api/adminUser';
 import type { AdminUserView, UserStatus } from '../../../types/adminUser';
+import { formatDate } from '../../../utils/date';
 
 const Container = styled.div`
     padding: 32px;
@@ -138,7 +139,7 @@ const AdminUserPage = () => {
                                 <Td>{user.userId}</Td>
                                 <Td>{user.nickname}</Td>
                                 <Td>{user.email}</Td>
-                                <Td>{new Date(user.createdAt).toLocaleDateString()}</Td>
+                                <Td>{formatDate(user.createdAt)}</Td>
                                 <Td>{user.status}</Td>
                                 <Td>
                                     <StatusSelect

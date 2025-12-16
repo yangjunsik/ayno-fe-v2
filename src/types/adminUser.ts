@@ -1,4 +1,4 @@
-import { PageResponse } from './common/response';
+import type { PageResponse } from './common/response';
 
 export type UserStatus = 'ACTIVE' | 'BLOCKED' | 'WITHDRAWN';
 

@@ -1,4 +1,4 @@
-import { client } from './client';
+import { client } from './common/client';
 import type { ApiResponse, PageResponse } from '../types/common/response';
 import type { Interest, JobRole, Tool } from '../types/resource';
 
