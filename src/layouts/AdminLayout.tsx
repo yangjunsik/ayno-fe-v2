@@ -11,7 +11,7 @@ const Container = styled.div`
 
 const MainContent = styled.main`
     flex: 1;
-    padding: 24px;
+    padding: 32px;
     overflow-y: auto;
 `;
 
