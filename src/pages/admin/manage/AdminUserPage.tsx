@@ -70,14 +70,14 @@ const StatusSelect = styled.select`
 
 const AdminUserPage = () => {
     const [users, setUsers] = useState<AdminUserView[]>([]);
-    const [searchId, setSearchId] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     const fetchUsers = async () => {
         setIsLoading(true);
         try {
             const response = await getUsers({
-                userId: searchId ? Number(searchId) : undefined,
+                q: searchQuery || undefined,
                 size: 20
             });
             if (response.data && Array.isArray(response.data.content)) {
@@ -95,7 +95,7 @@ const AdminUserPage = () => {
             fetchUsers();
         }, 300); // Debounce search
         return () => clearTimeout(timer);
-    }, [searchId]);
+    }, [searchQuery]);
 
     const handleStatusChange = async (userId: number, newStatus: UserStatus) => {
         if (!window.confirm(`유저 상태를 ${newStatus}로 변경하시겠습니까?`)) return;
@@ -112,14 +112,9 @@ const AdminUserPage = () => {
             <Title>유저 관리</Title>
             <FilterSection>
                 <SearchInput
-                    placeholder="User ID 검색 (숫자)"
-                    value={searchId}
-                    onChange={(e) => {
-                        const val = e.target.value;
-                        if (val === '' || /^\d+$/.test(val)) {
-                            setSearchId(val);
-                        }
-                    }}
+                    placeholder="유저 ID(숫자) 또는 닉네임 검색"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                 />
             </FilterSection>
 
