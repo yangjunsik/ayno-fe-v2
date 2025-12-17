@@ -8,9 +8,9 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute = ({ children }: PrivateRouteProps) => {
-    const { isLoggedIn, isLoading } = useAuth();
+    const { isLoggedIn, isInitializing } = useAuth();
 
-    if (isLoading) {
+    if (isInitializing) {
         return <Spinner />;
     }
 
