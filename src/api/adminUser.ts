@@ -1,6 +1,6 @@
 import { client } from './common/client';
 import type { ApiResponse } from '../types/common/response';
-import type { AdminUserView, UserPageResponse, UserStatus } from '../types/adminUser';
+import type { UserPageResponse, UserStatus } from '../types/adminUser';
 
 interface GetUsersParams {
     page?: number;
