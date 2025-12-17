@@ -161,8 +161,8 @@ const AdminUserPage = () => {
                 <thead>
                     <tr>
                         <Th width="80px" align="center">ID</Th>
-                        <Th width="180px">닉네임</Th>
-                        <Th>이메일</Th>
+                        <Th width="180px" align="center">닉네임</Th>
+                        <Th align="center">이메일</Th>
                         <Th width="120px" align="center">가입일</Th>
                         <Th width="100px" align="center">상태</Th>
                         <Th width="120px" align="center">관리</Th>
@@ -181,8 +181,8 @@ const AdminUserPage = () => {
                         users.map((user) => (
                             <tr key={user.userId}>
                                 <Td align="center">{user.userId}</Td>
-                                <Td>{user.nickname}</Td>
-                                <Td>{user.email}</Td>
+                                <Td align="center">{user.nickname}</Td>
+                                <Td align="center">{user.email}</Td>
                                 <Td align="center">{formatDate(user.createdAt)}</Td>
                                 <Td align="center">
                                     <StatusBadge status={user.status}>{user.status}</StatusBadge>
@@ -202,7 +202,7 @@ const AdminUserPage = () => {
                     )}
                 </tbody>
             </Table>
-        </Container>
+        </Container >
     );
 };
 

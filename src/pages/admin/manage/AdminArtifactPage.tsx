@@ -69,9 +69,8 @@ const StatusBadge = styled.span<{ status: string }>`
     border-radius: 4px;
     font-size: 12px;
     font-weight: 600;
-    background-color: ${props => props.status === 'PUBLIC' ? '#f6ffed' : '#fff1f0'};
-    color: ${props => props.status === 'PUBLIC' ? '#52c41a' : '#f5222d'};
-    border: 1px solid ${props => props.status === 'PUBLIC' ? '#b7eb8f' : '#ffa39e'};
+    background-color: ${props => props.status === 'PUBLIC' ? '#e6f7ff' : '#f5f5f5'};
+    color: ${props => props.status === 'PUBLIC' ? '#1890ff' : '#d9d9d9'};
 `;
 
 const DeleteButton = styled.button`
@@ -145,8 +144,8 @@ const AdminArtifactPage = () => {
                 <thead>
                     <tr>
                         <Th width="80px" align="center">ID</Th>
-                        <Th>제목</Th>
-                        <Th width="150px">작성자</Th>
+                        <Th align="center">제목</Th>
+                        <Th width="150px" align="center">작성자</Th>
                         <Th width="120px" align="center">작성일</Th>
                         <Th width="100px" align="center">상태</Th>
                         <Th width="80px" align="center">관리</Th>
@@ -165,8 +164,8 @@ const AdminArtifactPage = () => {
                         artifacts.map((artifact) => (
                             <tr key={artifact.artifactId}>
                                 <Td align="center">{artifact.artifactId}</Td>
-                                <Td>{artifact.artifactTitle}</Td>
-                                <Td>{artifact.nickname}</Td>
+                                <Td align="center">{artifact.artifactTitle}</Td>
+                                <Td align="center">{artifact.nickname}</Td>
                                 <Td align="center">{formatDate(artifact.createdAt)}</Td>
                                 <Td align="center">
                                     <StatusBadge status={artifact.visibility}>{artifact.visibility}</StatusBadge>
