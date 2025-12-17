@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { getReports, updateReportStatus } from '../../../api/adminReport';
 import { updateUserStatus } from '../../../api/adminUser';
