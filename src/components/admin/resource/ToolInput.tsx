@@ -15,13 +15,14 @@ interface ToolInputProps {
 
 const Form = styled.form`
     display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
-    align-items: center;
-    background-color: #f9f9f9;
-    padding: 16px;
-    border-radius: 8px;
+    gap: 16px;
+    margin-bottom: 32px;
+    align-items: flex-end;
+    background-color: #fff;
+    padding: 24px;
+    border-radius: 12px;
     border: 1px solid #eaeaea;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 `;
 
 const InputGroup = styled.div`

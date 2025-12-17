@@ -9,8 +9,13 @@ interface ResourceInputProps {
 
 const Container = styled.div`
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 12px;
+    margin-bottom: 32px;
+    padding: 24px;
+    background-color: #fff;
+    border-radius: 12px;
+    border: 1px solid #eaeaea;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 `;
 
 const Input = styled.input`
@@ -20,7 +25,7 @@ const Input = styled.input`
     border: 1px solid #e0e0e0;
     font-size: 16px;
     transition: all 0.2s;
-    background-color: #f9f9f9;
+    background-color: #fff;
 
     &:focus {
         outline: none;

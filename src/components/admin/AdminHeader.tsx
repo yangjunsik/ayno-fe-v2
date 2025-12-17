@@ -5,7 +5,7 @@ import { useAdminAuthContext } from '../../contexts/AdminAuthContext';
 
 const HeaderContainer = styled.header`
     background: #ffffff;
-    padding: 0 40px;
+    padding: 0 24px;
     height: 80px;
     display: flex;
     align-items: center;
@@ -15,34 +15,55 @@ const HeaderContainer = styled.header`
     position: relative;
 `;
 
+const ProfileSection = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 24px;
+`;
+
+const WelcomeText = styled.span`
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+    
+    strong {
+        font-weight: 700;
+    }
+`;
+
 const LogoutButton = styled.button`
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     background: none;
-    border: 1px solid #e0e0e0;
-    padding: 8px 16px;
+    border: none;
+    padding: 8px 12px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
-    color: #333;
+    font-size: 13px;
+    color: #888;
     transition: all 0.2s;
+    font-weight: 500;
 
     &:hover {
-        background-color: #000;
-        color: #fff;
-        border-color: #000;
+        background-color: #f5f5f5;
+        color: #d32f2f;
     }
 `;
 
 const AdminHeader = () => {
-    const { logout } = useAdminAuthContext();
+    const { adminUser, logout } = useAdminAuthContext();
 
     return (
         <HeaderContainer>
-            <LogoutButton onClick={logout}>
-                <FaSignOutAlt /> 로그아웃
-            </LogoutButton>
+            <ProfileSection>
+                <WelcomeText>
+                    안녕하세요, <strong>{adminUser?.adminName || '관리자'}</strong>님
+                </WelcomeText>
+                <LogoutButton onClick={logout}>
+                    <FaSignOutAlt /> 로그아웃
+                </LogoutButton>
+            </ProfileSection>
         </HeaderContainer>
     );
 };

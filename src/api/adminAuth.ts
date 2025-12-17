@@ -1,4 +1,4 @@
-import { client } from './client';
+import { client } from './common/client';
 import type { AdminUser } from '../types/admin';
 import type { ApiResponse } from '../types/common/response';
 

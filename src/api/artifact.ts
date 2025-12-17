@@ -1,4 +1,4 @@
-import { client } from './client';
+import { client } from './common/client';
 import type { Artifact } from '../types/artifact';
 import type { ApiResponse, PageResponse } from '../types/common/response';
 
