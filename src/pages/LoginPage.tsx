@@ -7,6 +7,7 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 import logo from '../assets/logo_hero.svg';
 import { PATH } from '../routes/constants/path';
 import { useAuth } from '../hooks/useLogin';
+import LoginErrorMessage from '../components/auth/LoginErrorMessage';
 
 const Container = styled.div`
   display: flex;
@@ -103,12 +104,7 @@ const LoginButton = styled.button`
   }
 `;
 
-const ErrorMessage = styled.p`
-  color: #EF4444;
-  font-size: 13px;
-  text-align: center;
-  margin-top: 4px;
-`;
+
 
 const Divider = styled.div`
   display: flex;
@@ -184,24 +180,18 @@ const SignupLink = styled.div`
 `;
 
 const LoginPage = () => {
-  const { login, kakaoLogin, googleLogin, isLoggingIn, error } = useAuth();
+  const { login, kakaoLogin, googleLogin, isLoggingIn, error, remainingTime } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [localError, setLocalError] = useState('');
 
   const handleLogin = async () => {
-    setLocalError('');
-    if (!email || !password) {
-      setLocalError('이메일과 비밀번호를 모두 입력해주세요.');
-      return;
-    }
+    if (remainingTime > 0) return;
 
     try {
       await login({ username: email, password });
     } catch (e) {
-      // Error is handled in hook and put into 'error' state, 
-      // but we can also catch it here if we needed to do something else.
+      // Error is handled in hook
     }
   };
 
@@ -217,7 +207,7 @@ const LoginPage = () => {
               placeholder="이메일을 입력해주세요"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              hasError={!!localError || !!error}
+              hasError={!!error}
             />
           </InputWrapper>
         </InputGroup>
@@ -232,7 +222,7 @@ const LoginPage = () => {
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleLogin();
               }}
-              hasError={!!localError || !!error}
+              hasError={!!error}
             />
             <TogglePasswordButton onClick={() => setShowPassword(!showPassword)} type="button">
               {showPassword ? <FiEyeOff /> : <FiEye />}
@@ -240,10 +230,16 @@ const LoginPage = () => {
           </InputWrapper>
         </InputGroup>
 
-        {(localError || error) && <ErrorMessage>{localError || error}</ErrorMessage>}
+        <LoginErrorMessage
+          error={error}
+        />
 
-        <LoginButton onClick={handleLogin} disabled={isLoggingIn}>
-          {isLoggingIn ? '로그인 중...' : '로그인'}
+        <LoginButton onClick={handleLogin} disabled={isLoggingIn || remainingTime > 0}>
+          {remainingTime > 0
+            ? `${Math.floor(remainingTime / 60)}분 ${remainingTime % 60}초 뒤 다시 시도`
+            : isLoggingIn
+              ? '로그인 중...'
+              : '로그인'}
         </LoginButton>
       </FormContainer>
 
